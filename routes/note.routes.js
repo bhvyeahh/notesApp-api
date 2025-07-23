@@ -1,17 +1,16 @@
 import { Router } from "express";
+import authorize from "../middleware/auth.middleware.js";
+import { createNote, getNotes } from "../controllers/note.controller.js";
 
 const notesRouter = Router();
 
-notesRouter.get('/', (req,res)=>{
-    res.send("Get all notes")
-})
+notesRouter.get('/', authorize, getNotes)
+
+notesRouter.post('/', authorize,  createNote)
+
 
 notesRouter.get('/:id', (req, res)=>{
     res.send("Get Notes Detail")
-})
-
-notesRouter.post('/', (req, res)=>{
-    res.send("Create Note")
 })
 
 notesRouter.put('/:id', (req,res)=>{

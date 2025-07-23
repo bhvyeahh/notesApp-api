@@ -1,14 +1,20 @@
 import mongoose from "mongoose";
 
 const noteSchema = new mongoose.Schema({
-    heading: {
+    title: { 
         type: String,
-        require: [true, "Heading is required"],
+        required: [true, "title is required"],
         maxLength: 50,
     },
     description: {
         type: String,
-        require: [true, "Description is required"]
+        required: [true, "Description is required"]
+    },
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, "User is required"],
+        index: true, // For faster lookups
     }
 }, {timestamps: true})
 
