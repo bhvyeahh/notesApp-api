@@ -1,14 +1,12 @@
 import { Router } from "express";
+import { getUser, getUsers } from "../controllers/user.controller.js";
+import authorize from "../middleware/auth.middleware.js";
 
 const userRouter = Router();
 
-userRouter.get('/', (req, res) => {
-    res.send('User route is working');
-});
+userRouter.get('/', getUsers);
 
-userRouter.get('/:id', (req, res) => {
-    res.send('User profile route is working');
-});
+userRouter.get('/:id', authorize , getUser);
 
 userRouter.post('/', (req, res) =>{
     res.send('User Registration route is working');
