@@ -1,25 +1,18 @@
 import { Router } from "express";
+import { createTodo, deleteTodo, editTodo, getTodo, getTodos } from "../controllers/todo.controller.js";
+import authorize from "../middleware/auth.middleware.js";
 
 const todoRouter = Router();
 
-todoRouter.get('/', (req,res)=>{
-    res.send("Get all todos")
-})
 
-todoRouter.get('/:id', (req,res)=>{
-    res.send("Get todos")
-})
+todoRouter.post('/', authorize, createTodo)
 
-todoRouter.post('/', (req,res)=>{
-    res.send("Create Todo")
-})
+todoRouter.get('/', authorize, getTodos)
 
-todoRouter.put('/:id', (req,res)=>{
-    res.send("Update Todo")
-})
+todoRouter.get('/:id',authorize, getTodo)
 
-todoRouter.delete('/:id', (req,res)=>{
-    res.send("Delete Todo")
-})
+todoRouter.put('/:id', authorize, editTodo)
+
+todoRouter.delete('/:id', authorize, deleteTodo)
 
 export default todoRouter

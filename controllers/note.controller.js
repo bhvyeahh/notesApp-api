@@ -26,7 +26,7 @@ export const getNotes = async (req, res, next) => {
   }
 };
 
-export const getNoteDetail = async (req, res, next) =>{
+export const getNote = async (req, res, next) =>{
   try {
     const note = await Note.findById(req.params.id);
 

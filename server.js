@@ -7,6 +7,7 @@ import authRouter from './routes/auth.routes.js';
 import userRouter from './routes/user.routes.js';
 import notesRouter from './routes/note.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
+import todoRouter from './routes/todo.routes.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/notes', notesRouter);
+app.use('/api/v1/todos', todoRouter);
 
 app.use(errorMiddleware)
 
