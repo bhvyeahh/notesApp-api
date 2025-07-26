@@ -18,6 +18,7 @@ export const getNotes = async (req, res, next) => {
     const notes = await Note.find({ user: req.user._id }).sort({ createdAt: -1 });
 
     res.status(200).json({
+      success: true,
       message: "Notes fetched successfully",
       data: notes,
     });
@@ -34,6 +35,7 @@ export const getNote = async (req, res, next) =>{
       return res.status(404).json({ message: "Note not found" });
     }
     res.status(200).json({
+      success: true,
       message: "Note details fetched successfully",
       data: note,
     });
@@ -55,6 +57,7 @@ export const editNote = async (req, res, next) => {
 
     await note.save();
     res.status(200).json({
+      success: true,
       message: "Note updated successfully",
       data: note,
     });
@@ -72,6 +75,7 @@ export const deleteNote = async (req, res, next) => {
     }
 
     res.status(200).json({
+      success: true,
       message: "Note deleted successfully",
       data: note,
     });
