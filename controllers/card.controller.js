@@ -1,4 +1,4 @@
-import Card from "../models/card.model";
+import Card from "../models/card.model.js";
 
 export const createCard = async (req, res, next) =>{
      try {
@@ -7,7 +7,7 @@ export const createCard = async (req, res, next) =>{
             user: req.user._id
         })
 
-        res.status(201).json({success: true, data: card})
+        res.status(201).json({success: true, message: "Card Created Successfully", data: card})
      } catch (error) {
         next(error)
      }
@@ -16,8 +16,7 @@ export const createCard = async (req, res, next) =>{
 export const getCards = async (req, res, next)=>{
     try {
         const card = await Card.find({user: req.user._id}).sort({createdAt: -1})
-
-        if(!card){
+        if(card.length === 0){
             return res.status(404).json({message: "Cards not found"})
         }
         res.status(200).json({success: true, message: "Cards fetched successfully", data: card})

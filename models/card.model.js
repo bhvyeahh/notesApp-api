@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const cardSchema = new mongoose.Schema({
   question: {
     type: String,
-    required: [true, "Title is required"],
+    required: [true, "Question is required"],
   },
   answer: {
     type: String,
-    required: [true, "Title is required"],
+    required: [true, "Answer is required"],
   },
   nextReview: {
     type: Date,
@@ -23,6 +23,14 @@ const cardSchema = new mongoose.Schema({
   repetitions: {
     type: Number,
     default: 0,
+  },
+  streak: {
+    type: Number,
+    default: 0,
+},
+  lastReviewed: {
+    type: Date,
+    default: Date.now,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

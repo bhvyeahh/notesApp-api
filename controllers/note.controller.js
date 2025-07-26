@@ -16,7 +16,9 @@ export const getNotes = async (req, res, next) => {
   try {
     // Get all notes that belong to the logged-in user
     const notes = await Note.find({ user: req.user._id }).sort({ createdAt: -1 });
-
+    if(notes.length == 0){
+      res.status(404).json({message: "Notes not found"})
+    }
     res.status(200).json({
       success: true,
       message: "Notes fetched successfully",

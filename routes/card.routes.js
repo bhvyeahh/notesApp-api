@@ -1,6 +1,6 @@
 import { Router } from "express";
-import authorize from "../middleware/auth.middleware";
-import { createCard, deleteCard, editCard, getCard, getCards } from "../controllers/card.controller";
+import authorize from "../middleware/auth.middleware.js";
+import { createCard, deleteCard, editCard, getCard, getCards } from "../controllers/card.controller.js";
 
 const cardRouter = Router();
 

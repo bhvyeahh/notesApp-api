@@ -25,6 +25,17 @@ const userSchema = new mongoose.Schema({
         minLength: 6,
         maxLength: 100,
     },
+    currentStreak: {
+        type: Number,
+        default: 0,
+  },
+    longestStreak: {
+        type: Number,
+        default: 0,
+  },
+    lastReviewDate: {
+        type: Date,
+  }
 }, {timestamps: true})
 
 const User = mongoose.model("User", userSchema)

@@ -17,6 +17,10 @@ export const getTodos = async (req, res, next) =>{
     try {
         const todos = await Todo.find({user: req.user._id}).sort({createdAt: -1})
 
+        if(todos.length == 0){
+            res.status(404).json({message: "Todos not found"})
+        }
+
         res.status(200).json({message: "Todos Fetched", data: todos})
     } catch (error) {
         next(error)

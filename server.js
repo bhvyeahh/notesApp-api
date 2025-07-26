@@ -9,6 +9,8 @@ import notesRouter from './routes/note.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
 import todoRouter from './routes/todo.routes.js';
 import cardRouter from './routes/card.routes.js';
+import reviewRouter from './routes/review.routes.js';
+
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/notes', notesRouter);
 app.use('/api/v1/todos', todoRouter);
 app.use('/api/v1/cards', cardRouter)
+app.use('/api/v1/review', reviewRouter)
 
 app.use(errorMiddleware)
 
