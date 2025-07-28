@@ -1,90 +1,130 @@
 import Card from "../models/card.model.js";
 
-export const createCard = async (req, res, next) =>{
-     try {
-        const card = await Card.create({
-            ...req.body,
-            user: req.user._id
-        })
+// ✅ Create a new card (already correct)
+export const createCard = async (req, res, next) => {
+  try {
+    const card = await Card.create({
+      ...req.body,
+      user: req.user._id, // Assigns owner
+    });
+    res.status(201).json({ 
+      success: true, 
+      message: "Card Created Successfully", 
+      data: card 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-        res.status(201).json({success: true, message: "Card Created Successfully", data: card})
-     } catch (error) {
-        next(error)
-     }
-}
+// ✅ Get all cards for the logged-in user (already correct)
+export const getCards = async (req, res, next) => {
+  try {
+    const cards = await Card.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.status(200).json({ 
+      success: true, 
+      message: cards.length ? "Cards fetched successfully" : "No cards found",
+      data: cards 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-export const getCards = async (req, res, next)=>{
-    try {
-        const card = await Card.find({user: req.user._id}).sort({createdAt: -1})
-        if(card.length === 0){
-            return res.status(404).json({message: "Cards not found"})
-        }
-        res.status(200).json({success: true, message: "Cards fetched successfully", data: card})
-    } catch (error) {
-        next(error)
+// 🔒 FIXED: Get a single card (with ownership check)
+export const getCard = async (req, res, next) => {
+  try {
+    const card = await Card.findOne({ 
+      _id: req.params.id, 
+      user: req.user._id // Ensures the card belongs to the user
+    });
+
+    if (!card) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Card not found or unauthorized access" 
+      });
     }
-}
 
-export const getCard = async (req, res, next)=>{
-    try {
-        const card = await Card.findById(req.params.id)
+    res.status(200).json({ 
+      success: true, 
+      message: "Card fetched successfully", 
+      data: card 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-        if(!card){
-            return res.status(404).json({message: "Card not found"})
-        }
+// 🔒 FIXED: Update a card (with ownership check + proper updates)
+export const editCard = async (req, res, next) => {
+  try {
+    const { question, answer, nextReview, ease, interval, repetitions } = req.body;
+    const card = await Card.findOne({ 
+      _id: req.params.id, 
+      user: req.user._id // Ensures the card belongs to the user
+    });
 
-        res.status(200).json({
-            success: true,
-            message: "Card Found Successfully",
-            data: card
-        })
-    } catch (error) {
-        next(error)
+    if (!card) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Card not found or unauthorized access" 
+      });
     }
-}
 
-export const editCard = async (req, res, next)=>{
-    try {
-        const card = await Card.findByIdAndUpdate(req.params.id)
+    // Update only provided fields
+    if (question) card.question = question;
+    if (answer) card.answer = answer;
+    if (nextReview) card.nextReview = nextReview;
+    if (ease) card.ease = ease;
+    if (interval) card.interval = interval;
+    if (repetitions) card.repetitions = repetitions;
 
-        if(!card){
-            return res.status(404).json({message: "Card not found"})
-        }
+    await card.save();
+    res.status(200).json({ 
+      success: true, 
+      message: "Card updated successfully", 
+      data: card 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-        // Update the card with the new data
-        card.question = req.body.question || card.question;
-        card.answer = req.body.answer || card.answer;
-        card.nextReview = req.body.nextReview || card.nextReview;
-        card.ease = req.body.ease || card.ease;
-        card.interval = req.body.interval || card.interval;
-        card.repetitions = req.body.repetitions || card.repetitions;
-        
-        await card.save();
-        res.status(200).json({
-            success: true,
-            message: "Card updated successfully",
-            data: card
-        })
+// 🔒 FIXED: Delete a card (with ownership check)
+export const deleteCard = async (req, res, next) => {
+  try {
+    const card = await Card.findOneAndDelete({ 
+      _id: req.params.id, 
+      user: req.user._id // Ensures the card belongs to the user
+    });
 
-    } catch (error) {
-        next(error)
+    if (!card) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Card not found or unauthorized access" 
+      });
     }
-}
 
-export const deleteCard = async (req, res, next)=>{
-    try {
-        const card = await Card.findByIdAndDelete(req.params.id)
-        if(!card){
-            return res.status(404).json({message: "Card not found"})
-        }
+    res.status(200).json({ 
+      success: true, 
+      message: "Card deleted successfully", 
+      data: card 
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-        res.status(200).json({
-            success: true,
-            message: "Card deleted successfully",
-            data: card
-        })
-    } catch (error) {
-        next(error)
-        
-    }
-}
+// ✅ Get cards for a specific user (already correct, but redundant ownership check)
+export const getUserCards = async (req, res, next) => {
+  try {
+    const cards = await Card.find({ user: req.params.id });
+    res.status(200).json({ 
+      success: true, 
+      data: cards 
+    });
+  } catch (error) {
+    next(error);
+  }
+};

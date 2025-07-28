@@ -1,43 +1,46 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-
-    name:{
+    name: {
         type: String,
-        require:  [true, "Subscription name is required"],
+        required: [true, "Name is required"],
         trim: true,
-        minLength: 3,
-        maxLength: 50,
+        minLength: [3, "Name must be at least 3 characters"],
+        maxLength: [50, "Name cannot exceed 50 characters"],
     },
-    email:{
+    email: {
         type: String,
         required: [true, "Email is required"],
         unique: true,
         trim: true,
         lowercase: true,
-        minLength: 5,
-        maxLength: 100,
-        match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, "Please enter a valid email address"],
+        minLength: [5, "Email must be at least 5 characters"],
+        maxLength: [100, "Email cannot exceed 100 characters"],
+        match: [
+            /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+            "Please enter a valid email address",
+        ],
     },
-    password:{
+    password: {
         type: String,
         required: [true, "Password is required"],
-        minLength: 6,
-        maxLength: 100,
+        minLength: [6, "Password must be at least 6 characters"],
+        maxLength: [100, "Password cannot exceed 100 characters"],
     },
     currentStreak: {
         type: Number,
-        default: 0,
-  },
+        default: 0,  // Starts at 0 (incremented when reviewing cards daily)
+    },
     longestStreak: {
         type: Number,
-        default: 0,
-  },
+        default: 0,  // Tracks the highest streak ever achieved
+    },
     lastReviewDate: {
-        type: Date,
-  }
-}, {timestamps: true})
+        type: Date,  // Null initially, updated on first review
+        default: null,
+    },
+}, { timestamps: true });
 
-const User = mongoose.model("User", userSchema)
+const User = mongoose.model("User", userSchema);
 
 export default User;

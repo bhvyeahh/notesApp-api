@@ -24,10 +24,6 @@ const cardSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  streak: {
-    type: Number,
-    default: 0,
-},
   lastReviewed: {
     type: Date,
     default: Date.now,

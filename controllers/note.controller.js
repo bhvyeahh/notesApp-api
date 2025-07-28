@@ -31,8 +31,8 @@ export const getNotes = async (req, res, next) => {
 
 export const getNote = async (req, res, next) =>{
   try {
-    const note = await Note.findById(req.params.id);
-
+    const note = await Note.findOne({ _id: req.params.id, user: req.user._id });
+    // Check if the note exists and belongs to the user
     if (!note) {
       return res.status(404).json({ message: "Note not found" });
     }
@@ -48,40 +48,49 @@ export const getNote = async (req, res, next) =>{
 
 export const editNote = async (req, res, next) => {
   try {
-    const note = await Note.findById(req.params.id);
+    const userId = req.user._id;
+    const id = req.params.id;
+    const { title, description } = req.body;
 
-    if(!note){
-      return res.status(404).json({message: "Note not found"})
+    const note = await Note.findOneAndUpdate(
+      { _id: id, user: userId },
+      { title, description },
+      { new: true, runValidators: true }
+    );
+
+    if (!note) {
+      return res.status(404).json({
+        message: "Note not found or unauthorized access",
+      });
     }
-    // Update the note with the new data
-    note.title = req.body.title || note.title;
-    note.description = req.body.description || note.description;
 
-    await note.save();
     res.status(200).json({
       success: true,
       message: "Note updated successfully",
       data: note,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
 
 export const deleteNote = async (req, res, next) => {
   try {
-    const note = await Note.findByIdAndDelete(req.params.id);
+    const userId = req.user._id;
+    const id = req.params.id;
 
+    const note = await Note.findOneAndDelete({ _id: id, user: userId });
     if (!note) {
-      return res.status(404).json({ message: "Note not found" });
+      return res.status(404).json({
+        message: "Note not found or unauthorized access",
+      });
     }
-
     res.status(200).json({
       success: true,
       message: "Note deleted successfully",
-      data: note,
     });
   } catch (error) {
     next(error);
   }
-}
+};

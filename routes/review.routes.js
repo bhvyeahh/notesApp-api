@@ -5,7 +5,7 @@ import authorize from "../middleware/auth.middleware.js"
 
 const reviewRouter = Router();
 
-reviewRouter.post('/:cardId/review', authorize,  reviewCard)
+reviewRouter.post('/:cardId', authorize,  reviewCard)
 
 export default reviewRouter
 
