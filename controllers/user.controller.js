@@ -73,7 +73,7 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
-
+ 
 // Delete User
 export const deleteUser = async (req, res, next) => {
   try {
